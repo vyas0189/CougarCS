@@ -7,6 +7,7 @@ const app = express();
 app.use(express.json({ extended: false }));
 const PORT = process.env.PORT || 4000;
 app.get('/', (req, res) => res.send('Home Page'));
+app.use('/uploads', express.static('uploads'));
 app.use('/profile_pic', express.static('profile_pic'));
 app.use('/api/event', require('./routes/api/event'));
 app.use('/api/officer', require('./routes/api/officer'));

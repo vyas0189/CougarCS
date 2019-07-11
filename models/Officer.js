@@ -18,13 +18,8 @@ const OfficerSchema = new mongoose.Schema({
     required: true
   },
   image: {
-    fileID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'uploadsPic.files'
-    },
-    fileName: {
-      type: String
-    }
+    type: String,
+    required: true
   },
   date: {
     type: Date,
