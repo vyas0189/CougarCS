@@ -6,18 +6,18 @@ const multer = require('multer');
 const fs = require('fs');
 const { promisify } = require('util');
 const unlinkAsync = promisify(fs.unlink);
+const admin = require('../../middleware/admin');
 
 const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, './uploads/');
+  destination: (req, file, cb) => {
+    cb(null, './officerImage/');
   },
-  filename: function(req, file, cb) {
-    cb(null, new Date().toISOString() + file.originalname);
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
   }
 });
 
 const fileFilter = (req, file, cb) => {
-  // reject a file
   if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
     cb(null, true);
   } else {
@@ -38,6 +38,7 @@ const upload = multer({
 // @access  Private
 router.post(
   '/',
+  admin,
   upload.single('profileImage'),
   [
     check('firstName', 'First Name is required')
@@ -127,8 +128,6 @@ router.post(
 router.get('/', async (req, res) => {
   try {
     const officers = await Officer.find();
-    console.log(officers);
-
     res.json(officers);
   } catch (err) {
     console.error(err.message);
@@ -157,6 +156,7 @@ router.get('/:officer_id', async (req, res) => {
 // @access  Private
 router.put(
   '/:officer_id',
+  admin,
   upload.single('profileImage'),
   [
     check('firstName', 'First Name is required')
@@ -220,7 +220,7 @@ router.put(
 // // @route   DELETE api/officer/:officer_id
 // // @desc    Delete a officer
 // // @access  Private
-router.delete('/:officer_id', async (req, res) => {
+router.delete('/:officer_id', admin, async (req, res) => {
   try {
     const officer = await Officer.findById(req.params.officer_id);
     if (!officer) {

@@ -1,0 +1,34 @@
+{
+    "sqltools.connections": [
+        {
+            "connectionTimeout": 30,
+            "database": "test",
+            "dialect": "PostgreSQL",
+            "name": "localhost",
+            "password": "@Calcus0",
+            "port": 5432,
+            "server": "127.0.0.1",
+            "username": "vyas0"
+        },
+        {
+            "connectionTimeout": 30,
+            "database": "test",
+            "dialect": "PostgreSQL",
+            "name": "localhost",
+            "password": "@Calcus0",
+            "port": 5432,
+            "server": "127.0.0.1",
+            "username": "postgres"
+        },
+        {
+            "connectionTimeout": 30,
+            "database": "ig_clone",
+            "dialect": "MySQL",
+            "name": "localhost",
+            "password": "@Calcus0",
+            "port": 3308,
+            "server": "127.0.0.1",
+            "username": "root"
+        }
+    ]
+}
