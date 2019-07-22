@@ -1,9 +1,13 @@
 const mongoose = require('mongoose');
 
 const AdminSchema = new mongoose.Schema({
-  adminInfo: {
-    type: mongoose.Schema.Types.ObjectId,
+  email: {
+    type: String,
     ref: 'member'
+  },
+  password: {
+    type: String,
+    required: true
   },
   date: {
     type: Date,

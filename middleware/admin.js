@@ -7,10 +7,10 @@ module.exports = function(req, res, next) {
   const admin = req.header('x-admin-token');
 
   // Check if no token
-  if (!token & !(admin == config.get('AUTH_ADMIN'))) {
+  if (!token && !(admin === config.get('AUTH_ADMIN'))) {
     return res.status(401).json({ msg: 'No token, authorization denied' });
   }
-  //Verify token
+  // Verify token
   try {
     const decoded = jwt.verify(token, config.get('JWT_SECRET'));
     req.user = decoded.user;

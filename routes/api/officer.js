@@ -1,10 +1,12 @@
 const express = require('express');
+
 const router = express.Router();
 const { check, validationResult } = require('express-validator/check');
-const Officer = require('../../models/Officer');
 const multer = require('multer');
 const fs = require('fs');
 const { promisify } = require('util');
+const Officer = require('../../models/Officer');
+
 const unlinkAsync = promisify(fs.unlink);
 const admin = require('../../middleware/admin');
 
@@ -26,11 +28,11 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({
-  storage: storage,
+  storage,
   limits: {
     fileSize: 1024 * 1024 * 5
   },
-  fileFilter: fileFilter
+  fileFilter
 });
 
 // @route   POST api/officer
@@ -200,9 +202,8 @@ router.put(
               return res
                 .status(400)
                 .json({ errors: [{ msg: 'Error updating' }] });
-            } else {
-              res.json(obj);
             }
+            res.json(obj);
           }
         );
       } else {

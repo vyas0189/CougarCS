@@ -1,11 +1,12 @@
 const express = require('express');
-const router = express.Router();
-const Member = require('../../models/Member');
-const auth = require('../../middleware/auth');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const bcrypt = require('bcryptjs');
 const { check, validationResult } = require('express-validator/check');
+const auth = require('../../middleware/auth');
+const Member = require('../../models/Member');
+
+const router = express.Router();
 
 // @route   GET api/auth
 // @desc    Get all members
@@ -39,7 +40,7 @@ router.post(
 
     try {
       // See if member exists
-      let member = await Member.findOne({ email });
+      const member = await Member.findOne({ email });
       if (!member) {
         return res
           .status(400)
@@ -96,7 +97,7 @@ router.post(
 
     try {
       // See if member exists
-      let member = await Member.findOne({ email });
+      const member = await Member.findOne({ email });
       if (!member) {
         return res
           .status(400)
