@@ -1,24 +1,16 @@
 const mongoose = require('mongoose');
 
 const OfficerSchema = new mongoose.Schema({
-  firstName: {
-    type: String,
-    required: true
-  },
-  lastName: {
-    type: String,
-    required: true
-  },
-  email: {
-    type: String,
-    required: true
+  officerMember: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'member'
   },
   position: {
     type: String,
     required: true
   },
-  image: {
-    type: String,
+  isCurrent: {
+    type: Boolean,
     required: true
   },
   date: {

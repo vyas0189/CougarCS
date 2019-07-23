@@ -14,37 +14,20 @@ const MemberSchema = new mongoose.Schema({
     required: true
   },
   password: {
-    type: String,
-    required: true
+    type: String
   },
-  image: {
+  profileImage: {
     type: String,
     required: true
   },
   resume: {
     type: String
   },
-  isAdmin: {
+  isOfficer: {
     type: Boolean,
     required: true,
     default: false
   },
-  roleData: [
-    {
-      isOfficer: {
-        type: Boolean,
-        required: true,
-        default: false
-      }
-    },
-    {
-      typeOfRole: {
-        type: String,
-        required: true,
-        default: 'member'
-      }
-    }
-  ],
   date: {
     type: Date,
     default: Date.now
