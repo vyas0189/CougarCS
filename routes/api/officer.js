@@ -132,7 +132,7 @@ router.put(
           req.file.path !== 'assets/users-01.png' &&
           member.profileImage !== 'assets/users-01.png'
         ) {
-          await unlinkAsync(req.file.path);
+          await unlinkAsync(member.profileImage);
         }
         await Officer.findByIdAndUpdate(
           officer.id,
@@ -185,7 +185,7 @@ router.put(
         if (req.file.path !== 'assets/users-01.png') {
           await unlinkAsync(req.file.path);
         }
-        res.status(500).send('Server Error');
+        res.status(500).send('Officer not found');
       }
     } catch (err) {
       if (req.file.path !== 'assets/users-01.png') {
