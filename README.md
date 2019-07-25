@@ -16,8 +16,8 @@ _Backend starts on server.js_
 | Add admin and auth                                                       |  DONE  |     Vyas     |
 | Build Admin Model                                                        |  DONE  |     Vyas     |
 | CREATE MEMBER ROUTE                                                      |  DONE  |     Vyas     |
-| Add CRUD operation to member route                                       |        |              |
-| Create folder for the member to upload their profile picture (optional?) |        |              |
+| Add CRUD operation to member route                                       |  DONE  |     Vyas     |
+| Create folder for the member to upload their profile picture (optional?) |  DONE  |     Vyas     |
 | CREATE PROFILE ROUTE                                                     |        |              |
 | Build Profile Model                                                      |        |              |
 | CRUD for Profile model                                                   |        |              |

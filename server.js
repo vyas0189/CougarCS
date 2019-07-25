@@ -13,7 +13,7 @@ app.use('/profileImages', express.static('images'));
 app.use('/api/admin', require('./routes/api/admin'));
 // app.use('/api/event', require('./routes/api/event'));
 app.use('/api/member', require('./routes/api/member'));
-app.use('/api/member/officer', require('./routes/api/officer'));
+app.use('/api/officers', require('./routes/api/officer'));
 app.use('/api/auth', require('./routes/api/auth'));
 
 app.listen(PORT, () => console.log(`Listening to port ${PORT}`));

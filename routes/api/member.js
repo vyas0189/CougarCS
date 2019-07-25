@@ -9,15 +9,14 @@ const multer = require('multer');
 
 const unlinkAsync = promisify(fs.unlink);
 const Member = require('../../models/Member');
-// const Officer = require('../../models/Officer');
+const Officer = require('../../models/Officer');
 const auth = require('../../middleware/auth');
+const admin = require('../../middleware/admin');
 
 const router = express.Router();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    console.log(req.file);
-
     cb(null, './images/');
   },
   filename: (req, file, cb) => {
@@ -46,8 +45,6 @@ const upload = multer({
 // @access  Public
 router.get('/', async (req, res) => {
   try {
-    // console.log(__dirname);
-
     const members = await Member.find();
     res.json(members);
   } catch (err) {
@@ -166,8 +163,6 @@ router.put(
       email,
       profileImage: req.file.path
     };
-    console.log(memberDetails.profileImage);
-
     try {
       const member = await Member.findById(req.params.member_id);
 
@@ -205,5 +200,47 @@ router.put(
 // @route   DELETE api/:member_id
 // @desc    Delete an members
 // @access  Public
+router.delete('/:member_id', admin, async (req, res) => {
+  try {
+    const member = await Member.findById(req.params.member_id);
+    if (member) {
+      if (member.isOfficer) {
+        const officer = await Officer.findOne({ officerMember: member.id });
+
+        if (officer) {
+          await Officer.findByIdAndDelete(officer.id, (err, _) => {
+            if (err) return res.status(500).send(err);
+          });
+          await Member.findByIdAndDelete(
+            req.params.member_id,
+            async (err, obj) => {
+              if (err) return res.status(500).send(err);
+              if (member.profileImage !== 'assets/users-01.png') {
+                await unlinkAsync(member.profileImage);
+              }
+              res.json(obj);
+            }
+          );
+        }
+      } else {
+        await Member.findByIdAndDelete(
+          req.params.member_id,
+          async (err, obj) => {
+            if (err) return res.status(500).send(err);
+            if (member.profileImage !== 'assets/users-01.png') {
+              await unlinkAsync(member.profileImage);
+            }
+            res.json(obj);
+          }
+        );
+      }
+    } else {
+      return res.status(400).json({ msg: 'User not found' });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 module.exports = router;

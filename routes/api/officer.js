@@ -36,126 +36,42 @@ const upload = multer({
   fileFilter
 });
 
-// @route   POST api/officer
-// @desc    Add a officer
-// @access  Private
-// router.post(
-//   '/',
-//   admin,
-//   upload.single('profileImage'),
-//   [
-//     check('firstName', 'First Name is required')
-//       .not()
-//       .isEmpty(),
-//     check('lastName', 'Last Name is required')
-//       .not()
-//       .isEmpty(),
-//     check('position', 'Position is required')
-//       .not()
-//       .isEmpty(),
-//     check('email', 'Email is required').isEmail()
-//   ],
-//   async (req, res) => {
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//       await unlinkAsync(req.file.path);
-//       return res.status(400).json({ msg: errors.array() });
-//     }
-//     const { firstName, lastName, email, position } = req.body;
-//     try {
-//       let officer = await Officer.findOne({ email });
-//       if (officer) {
-//         if (req.file) {
-//           await unlinkAsync(req.file.path);
-//         }
-//         return res
-//           .status(400)
-//           .json({ errors: [{ msg: 'User already exists' }] });
-//       }
-
-//       officer = new Officer({
-//         firstName,
-//         lastName,
-//         email,
-//         position,
-//         image: req.file.path
-//       });
-//       await officer.save();
-//       res.json(officer);
-//     } catch (err) {
-//       await unlinkAsync(req.file.path);
-//       console.error(err.message);
-//       res.status(500).send('Server Error');
-//     }
-//   }
-// );
-
-// @route   GET api/officer/image/:imageID
-// @desc    Get all officers
-// @access  Public
-// router.get('/image/:imageName', (req, res) => {
-//   try {
-//     const fileUpload = mongoose.connection.db.collection('uploadsPic.files');
-//     const chuck = mongoose.connection.db.collection('uploadsPic.chunks');
-//     fileUpload.find({ filename: req.params.imageName }).toArray((err, docs) => {
-//       console.log(docs);
-
-//       chuck
-//         .find({ files_id: docs[0]._id })
-//         .sort({ n: 1 })
-//         .toArray((err, chunks) => {
-//           console.log(chunks);
-
-//           if (err) {
-//             res.send(err);
-//           }
-//           let fileData = [];
-//           for (let i = 0; i < chunks.length; i++) {
-//             fileData.push(chunks[i].data.toString('base64'));
-//           }
-//           let resData = `data:${docs[0].contentType};base64,${fileData.join(
-//             ''
-//           )}`;
-//           res.send(resData);
-//         });
-//     });
-//   } catch (err) {
-//     console.error(err.message);
-//     res.status(500).send('Server Error');
-//   }
-// });
-
 // @route   GET api/officer
 // @desc    Get all officers
 // @access  Public
-// router.get('/', async (req, res) => {
-//   try {
-//     const officers = await Officer.find();
-//     res.json(officers);
-//   } catch (err) {
-//     console.error(err.message);
-//     res.status(500).send('Server Error');
-//   }
-// });
+router.get('/', async (req, res) => {
+  try {
+    const officers = await Officer.find().select('-password');
+    res.json(officers);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
-// // @route   GET api/officer/:officer_id
-// // @desc    Get specific officers
-// // @access  Private
-// router.get('/:officer_id', async (req, res) => {
-//   try {
-//     const officers = await Officer.findById(req.params.officer_id);
-//     if (!officers) {
-//       return res.status(400).json({ msg: 'User not found' });
-//     }
-//     res.json(officers);
-//   } catch (err) {
-//     console.error(err.message);
-//     res.status(500).send('Server Error');
-//   }
-// });
+// @route   GET api/officer/:officer_id
+// @desc    Get specific officers
+// @access  Private
+router.get('/:officer_id', async (req, res) => {
+  try {
+    const officers = await Officer.findById(req.params.officer_id);
+    if (!officers) {
+      return res.status(400).json({ msg: 'User not found' });
+    }
+    const info = await Member.findById(officers.officerMember).select(
+      '-password'
+    );
+    officers.info = info;
+    const officerDetails = { officers, info };
+    res.json(officerDetails);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 // @route   PUT api/member/officer/:officer_id
-// @desc    Edit a officer
+// @desc    Edit/Add a officer
 // @access  Private
 router.put(
   '/:officer_id',
@@ -212,41 +128,47 @@ router.put(
       const member = await Member.findById(req.params.officer_id);
 
       if (officer) {
-        if (member.profileImage !== 'assets/users-01.png') {
+        if (
+          req.file.path !== 'assets/users-01.png' &&
+          member.profileImage !== 'assets/users-01.png'
+        ) {
           await unlinkAsync(req.file.path);
         }
-        // await member.save();
         await Officer.findByIdAndUpdate(
           officer.id,
           officerModelDetails,
-          (err, obj) => {
-            if (err) {
+          async (err1, data) => {
+            const MemberData = data;
+            if (err1) {
               return res
                 .status(400)
                 .json({ errors: [{ msg: 'Error updating' }] });
             }
+            await Member.findByIdAndUpdate(
+              req.params.officer_id,
+              officerMember,
+              (err2, obj) => {
+                if (err2) {
+                  return res
+                    .status(400)
+                    .json({ errors: [{ msg: 'Error updating member' }] });
+                }
+                MemberData.md = obj;
+              }
+            );
+            res.json(MemberData);
           }
         );
-        await Member.findByIdAndUpdate(
-          req.params.officer_id,
-          officerMember,
-          (err, obj) => {
-            if (err) {
-              return res
-                .status(400)
-                .json({ errors: [{ msg: 'Error updating member' }] });
-            }
-            res.json(obj);
-          }
-        );
-      } else if (!officer) {
-        // await unlinkAsync(req.file.path);
-        // return res.status(400).json({ errors: [{ msg: 'Error updating' }] });
-        officer = new Officer(officerModelDetails);
-        await officer.save();
-        if (member.profileImage !== 'assets/users-01.png') {
+      } else if (!officer && isOfficer) {
+        if (
+          member.profileImage !== 'assets/users-01.png' &&
+          require.file.path !== 'assets/users-01.png'
+        ) {
           await unlinkAsync(req.file.path);
         }
+        officer = new Officer(officerModelDetails);
+        await officer.save();
+
         await Member.findByIdAndUpdate(
           req.params.officer_id,
           officerMember,
@@ -275,27 +197,4 @@ router.put(
   }
 );
 
-// // // @route   DELETE api/officer/:officer_id
-// // // @desc    Delete a officer
-// // // @access  Private
-// router.delete('/:officer_id', admin, async (req, res) => {
-//   try {
-//     const officer = await Officer.findById(req.params.officer_id);
-//     if (!officer) {
-//       return res.status(400).json({ msg: 'User not found' });
-//     }
-//     await Officer.findByIdAndDelete(req.params.officer_id, async (err, obj) => {
-//       if (err) return res.status(500).send(err);
-//       // gfs.files.deleteOne({ _id: officer.image.fileID }, (err, ret) => {
-//       //   if (err) console.log(err);
-//       // });
-//       await unlinkAsync(officer.image);
-
-//       res.json(obj);
-//     });
-//   } catch (err) {
-//     console.error(err.message);
-//     res.status(500).send('Server Error');
-//   }
-// });
 module.exports = router;

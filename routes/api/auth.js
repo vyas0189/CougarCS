@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const { check, validationResult } = require('express-validator/check');
 const auth = require('../../middleware/auth');
 const Member = require('../../models/Member');
+const Admin = require('../../models/Admin');
 
 const router = express.Router();
 
@@ -94,30 +95,25 @@ router.post(
     }
 
     const { email, password } = req.body;
-
     try {
       // See if member exists
-      const member = await Member.findOne({ email });
-      if (!member) {
+      const admin = await Admin.findOne({ email });
+      if (!admin) {
         return res
           .status(400)
           .json({ errors: [{ msg: 'Invalid Credentials' }] });
       }
 
-      const isMatch = await bcrypt.compare(password, member.password);
+      const isMatch = await bcrypt.compare(password, admin.password);
       if (!isMatch) {
         return res
           .status(400)
           .json({ errors: [{ msg: 'Invalid Credentials' }] });
       }
-
-      if (!member.isAdmin) {
-        return res.status(400).json({ errors: [{ msg: 'Not Authorized' }] });
-      }
       // Return jsonwebtoken
       const payload = {
-        member: {
-          id: member.id
+        admin: {
+          id: admin.id
         }
       };
 
