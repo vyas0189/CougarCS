@@ -16,14 +16,27 @@ const MemberSchema = new mongoose.Schema({
   password: {
     type: String
   },
-  profileImage: {
-    type: String,
-    required: true
-  },
+  profileImageData: [
+    {
+      profileImage: {
+        type: String,
+        required: true
+      },
+      profileImageKey: {
+        type: String,
+        required: true
+      }
+    }
+  ],
   resume: {
     type: String
   },
   isOfficer: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  isEmployee: {
     type: Boolean,
     required: true,
     default: false
