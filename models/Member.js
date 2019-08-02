@@ -16,18 +16,16 @@ const MemberSchema = new mongoose.Schema({
   password: {
     type: String
   },
-  profileImageData: [
-    {
-      profileImage: {
-        type: String,
-        required: true
-      },
-      profileImageKey: {
-        type: String,
-        required: true
-      }
+  profileImageData: {
+    profileImage: {
+      type: String,
+      required: true
+    },
+    profileImageKey: {
+      type: String,
+      required: true
     }
-  ],
+  },
   resume: {
     type: String
   },

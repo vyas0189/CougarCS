@@ -20,7 +20,12 @@ const upload = multer({
       cb(null, { fieldName: file.fieldname });
     },
     key(req, file, cb) {
-      cb(null, `images/${Date.now().toString()}${file.originalname}`);
+      cb(
+        null,
+        `images/${new Date().toISOString().replace(/:/g, '-')}${
+          file.originalname
+        }`
+      );
     }
   }),
   fileFilter

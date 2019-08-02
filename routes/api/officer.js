@@ -118,7 +118,10 @@ router.put(
       firstName,
       lastName,
       email,
-      profileImage: req.file.path
+      profileImageData: {
+        profileImage: req.file.location,
+        profileImageKey: req.file.key
+      }
     };
 
     try {

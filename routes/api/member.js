@@ -3,13 +3,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator/check');
-const fs = require('fs');
-const { promisify } = require('util');
 const { s3 } = require('../../config/aws');
 const { upload } = require('../uploads/profileImage');
 require('../../config/aws');
 
-const unlinkAsync = promisify(fs.unlink);
 const Member = require('../../models/Member');
 const Officer = require('../../models/Officer');
 const auth = require('../../middleware/auth');
@@ -22,7 +19,7 @@ const router = express.Router();
 // @access  Public
 router.get('/', async (req, res) => {
   try {
-    const members = await Member.find();
+    const members = await Member.find().select('-password');
     res.send(members);
   } catch (err) {
     console.error(err.message);
@@ -39,20 +36,7 @@ router.get('/:member_id', async (req, res) => {
     if (!member) {
       return res.status(400).json({ msg: 'User not found' });
     }
-
-    const params = {
-      Bucket: config.get('AWS_BUCKET_NAME'),
-      Key: member.profileImage
-    };
-    // await s3.getObject(params, (err, data) => {
-    //   if (err) {
-    //     console.log(err);
-    //   } else {
-    //     const imageData = data.Body;
-    //     res.json({ member, imageData });
-    //   }
-    // });
-    req.json(member);
+    res.json(member);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -88,9 +72,11 @@ router.post(
           .json({ errors: [{ msg: 'User already exists' }] });
       }
       const profileImageData = {
-        profileImage: 'assets/users-01.png',
-        profileImageKey: 'assets/users-01.png'
+        profileImage:
+          'https://cougarscs-profile-images.s3.us-east-2.amazonaws.com/static/users-01.png',
+        profileImageKey: 'static/users-01.png'
       };
+
       member = new Member({
         firstName,
         lastName,
@@ -99,7 +85,6 @@ router.post(
         isOfficer: false,
         profileImageData
       });
-      console.log(member);
 
       const salt = await bcrypt.genSalt(10);
       member.password = await bcrypt.hash(password, salt);
@@ -144,14 +129,15 @@ router.put(
   ],
   async (req, res) => {
     const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
-      if (req.file.key !== 'assets/users-01.png') {
+      if (req.file.originalname !== 'users-01.png') {
         s3.deleteObject(
           {
             Bucket: config.get('AWS_BUCKET_NAME'),
             Key: req.file.key
           },
-          (err, _) => {
+          err => {
             if (err) res.send({ err });
           }
         );
@@ -160,67 +146,87 @@ router.put(
     }
 
     const { firstName, lastName, email } = req.body;
-    // console.log(req.file);
 
     try {
-      const memberDetails = {
-        firstName,
-        lastName,
-        email,
-        profileImageData: {
-          profileImage: req.file.location,
-          profileImageKey: req.file.key
-        }
-      };
       const member = await Member.findById(req.params.member_id);
+      const lookUpMembers = await Member.find({ email });
 
-      if (member) {
-        if (member.profileImage !== 'assets/users-01.png') {
-          s3.deleteObject(
-            {
-              Bucket: config.get('AWS_BUCKET_NAME'),
-              Key: member.profileImageData[0].profileImageKey
-            },
-            (err, _) => {
-              if (err) res.send({ err });
+      if (lookUpMembers.length === 0 || lookUpMembers[0].id === member.id) {
+        const memberDetails = {
+          firstName,
+          lastName,
+          email,
+          profileImageData: {
+            profileImage: req.file.location,
+            profileImageKey: req.file.key
+          }
+        };
+
+        if (member) {
+          if (
+            member.profileImageData.profileImageKey !== 'static/users-01.png'
+          ) {
+            s3.deleteObject(
+              {
+                Bucket: config.get('AWS_BUCKET_NAME'),
+                Key: member.profileImageData.profileImageKey
+              },
+              err => {
+                if (err) res.send({ err });
+              }
+            );
+          }
+          await Member.findByIdAndUpdate(
+            req.params.member_id,
+            memberDetails,
+            (err, obj) => {
+              if (err) {
+                return res
+                  .status(400)
+                  .json({ errors: [{ msg: 'Error updating' }] });
+              }
+              res.json(obj);
             }
           );
-        }
-        await Member.findByIdAndUpdate(
-          req.params.member_id,
-          memberDetails,
-          (err, obj) => {
-            if (err) {
-              return res
-                .status(400)
-                .json({ errors: [{ msg: 'Error updating' }] });
-            }
-            res.json(obj);
+        } else {
+          if (req.file.originalname !== 'users-01.png') {
+            s3.deleteObject(
+              {
+                Bucket: config.get('AWS_BUCKET_NAME'),
+                Key: req.file.key
+              },
+              err => {
+                if (err) res.send({ err });
+              }
+            );
           }
-        );
+          return res.status(400).json({ errors: [{ msg: 'Error updating' }] });
+        }
       } else {
-        if (req.file.key !== 'assets/users-01.png') {
+        if (req.file.originalname !== 'users-01.png') {
           s3.deleteObject(
             {
               Bucket: config.get('AWS_BUCKET_NAME'),
               Key: req.file.key
             },
-            (err, _) => {
+            err => {
               if (err) res.send({ err });
             }
           );
         }
-        return res.status(400).json({ errors: [{ msg: 'Error updating' }] });
+        return res
+          .status(400)
+          .json({ errors: [{ msg: 'Email is already taken.' }] });
       }
     } catch (err) {
-      if (req.file.key !== 'assets/users-01.png') {
+      if (req.file.originalname !== 'users-01.png') {
         s3.deleteObject(
           {
             Bucket: config.get('AWS_BUCKET_NAME'),
             Key: req.file.key
           },
-          (err, _) => {
-            if (err) res.send({ err });
+          err2 => {
+            if (err2) res.send({ err2 });
           }
         );
       }
@@ -247,14 +253,17 @@ router.delete('/:member_id', admin, async (req, res) => {
             req.params.member_id,
             async (err, obj) => {
               if (err) return res.status(500).send(err);
-              if (member.profileImage !== 'assets/users-01.png') {
+              if (
+                member.profileImageData.profileImageKey !==
+                'static/users-01.png'
+              ) {
                 s3.deleteObject(
                   {
                     Bucket: config.get('AWS_BUCKET_NAME'),
-                    Key: member.profileImage
+                    Key: member.profileImage[0].profileImageKey
                   },
-                  (err, _) => {
-                    if (err) res.send({ err });
+                  err2 => {
+                    if (err) res.send({ err2 });
                   }
                 );
               }
@@ -267,14 +276,16 @@ router.delete('/:member_id', admin, async (req, res) => {
           req.params.member_id,
           async (err, obj) => {
             if (err) return res.status(500).send(err);
-            if (member.profileImage !== 'assets/users-01.png') {
+            if (
+              member.profileImageData.profileImageKey !== 'static/users-01.png'
+            ) {
               s3.deleteObject(
                 {
                   Bucket: config.get('AWS_BUCKET_NAME'),
-                  Key: member.profileImage
+                  Key: member.profileImageData.profileImageKey
                 },
-                (err, _) => {
-                  if (err) res.send({ err });
+                err2 => {
+                  if (err2) res.send({ err2 });
                 }
               );
             }
