@@ -87,6 +87,9 @@ const ProfileSchema = new mongoose.Schema({
     },
     linkedin: {
       type: String
+    },
+    githubusername: {
+      type: String
     }
   },
   date: {
@@ -95,4 +98,4 @@ const ProfileSchema = new mongoose.Schema({
   }
 });
 
-module.exports = Profile = mongoose.model('profile', ProfileSchema);
+module.exports = mongoose.model('profile', ProfileSchema);

@@ -10,7 +10,6 @@ require('../../config/aws');
 const Member = require('../../models/Member');
 const Officer = require('../../models/Officer');
 const auth = require('../../middleware/auth');
-const admin = require('../../middleware/admin');
 
 const router = express.Router();
 
@@ -113,7 +112,7 @@ router.post(
 );
 // @route   PUT api/:member_id
 // @desc    Update an members
-// @access  Public
+// @access  Private
 router.put(
   '/:member_id',
   auth,
@@ -148,7 +147,7 @@ router.put(
     const { firstName, lastName, email } = req.body;
 
     try {
-      const member = await Member.findById(req.params.member_id);
+      const member = await Member.findById(req.member.id);
       const lookUpMembers = await Member.find({ email });
 
       if (lookUpMembers.length === 0 || lookUpMembers[0].id === member.id) {
@@ -238,38 +237,43 @@ router.put(
 // @route   DELETE api/:member_id
 // @desc    Delete an members
 // @access  Private
-router.delete('/:member_id', admin, async (req, res) => {
+router.delete('/:member_id', auth, async (req, res) => {
   try {
     const member = await Member.findById(req.params.member_id);
     if (member) {
       if (member.isOfficer) {
-        const officer = await Officer.findOne({ officerMember: member.id });
+        const officer = await Officer.findOne({ member: member.id });
 
         if (officer) {
           await Officer.findByIdAndDelete(officer.id, err => {
             if (err) return res.status(500).send(err);
           });
-          await Member.findByIdAndDelete(
-            req.params.member_id,
-            async (err, obj) => {
-              if (err) return res.status(500).send(err);
-              if (
-                member.profileImageData.profileImageKey !==
-                'static/users-01.png'
-              ) {
-                s3.deleteObject(
-                  {
-                    Bucket: config.get('AWS_BUCKET_NAME'),
-                    Key: member.profileImage[0].profileImageKey
-                  },
-                  err2 => {
-                    if (err) res.send({ err2 });
-                  }
-                );
-              }
-              res.json(obj);
+          await Member.findByIdAndDelete(req.params.member_id, (err, obj) => {
+            if (err) return res.status(500).send(err);
+            if (
+              member.profileImageData.profileImageKey !== 'static/users-01.png'
+            ) {
+              s3.deleteObject(
+                {
+                  Bucket: config.get('AWS_BUCKET_NAME'),
+                  Key: member.profileImageData.profileImageKey
+                },
+                err2 => {
+                  if (err) res.send({ err2 });
+                }
+              );
             }
-          );
+            s3.deleteObject(
+              {
+                Bucket: config.get('AWS_BUCKET_NAME'),
+                Key: member.resumeData.resumeKey
+              },
+              err2 => {
+                if (err) res.send({ err2 });
+              }
+            );
+            res.json(obj);
+          });
         }
       } else {
         await Member.findByIdAndDelete(
@@ -289,6 +293,15 @@ router.delete('/:member_id', admin, async (req, res) => {
                 }
               );
             }
+            s3.deleteObject(
+              {
+                Bucket: config.get('AWS_BUCKET_NAME'),
+                Key: member.resumeData.resumeKey
+              },
+              err2 => {
+                if (err) res.send({ err2 });
+              }
+            );
             res.json(obj);
           }
         );

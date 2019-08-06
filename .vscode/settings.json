@@ -54,5 +54,6 @@
         "statusBarItem.hoverBackground": "#2f7c47",
         "statusBar.foreground": "#e7e7e7"
     },
-    "cquery.cacheDirectory": "${workspaceFolder}/.vscode/cquery_cached_index/"
+    "cquery.cacheDirectory": "${workspaceFolder}/.vscode/cquery_cached_index/",
+    "peacock.color": "#215732"
 }

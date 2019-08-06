@@ -1,41 +1,14 @@
 const express = require('express');
-
-const router = express.Router();
+const config = require('config');
 const { check, validationResult } = require('express-validator/check');
-const multer = require('multer');
-const fs = require('fs');
-const { promisify } = require('util');
 const Officer = require('../../models/Officer');
 const Member = require('../../models/Member');
+const { s3 } = require('../../config/aws');
+const { upload } = require('../uploads/profileImage');
 
-const unlinkAsync = promisify(fs.unlink);
 const admin = require('../../middleware/admin');
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, './images/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
-  }
-});
-
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
-
-const upload = multer({
-  storage,
-  limits: {
-    fileSize: 1024 * 1024 * 5
-  },
-  fileFilter
-});
-
+const router = express.Router();
 // @route   GET api/officer
 // @desc    Get all officers
 // @access  Public
@@ -51,19 +24,21 @@ router.get('/', async (req, res) => {
 
 // @route   GET api/officer/:officer_id
 // @desc    Get specific officers
-// @access  Private
+// @access  Public
 router.get('/:officer_id', async (req, res) => {
   try {
-    const officers = await Officer.findById(req.params.officer_id);
+    const officers = await Officer.findOne({
+      member: req.params.officer_id
+    }).populate('member', [
+      'firstName',
+      'lastName',
+      'email',
+      'profileImageData'
+    ]);
     if (!officers) {
       return res.status(400).json({ msg: 'User not found' });
     }
-    const info = await Member.findById(officers.officerMember).select(
-      '-password'
-    );
-    officers.info = info;
-    const officerDetails = { officers, info };
-    res.json(officerDetails);
+    res.json(officers);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -92,28 +67,28 @@ router.put(
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      if (req.file.path !== 'assets/users-01.png') {
-        await unlinkAsync(req.file.path);
+      if (req.file.originalname !== 'users-01.png') {
+        s3.deleteObject(
+          {
+            Bucket: config.get('AWS_BUCKET_NAME'),
+            Key: req.file.key
+          },
+          err => {
+            if (err) res.send({ err });
+          }
+        );
       }
-
       return res.status(400).json({ msg: errors.array() });
     }
-
-    const {
-      firstName,
-      lastName,
-      email,
-      position,
-      isCurrent,
-      isOfficer
-    } = req.body;
-
+    let { isOfficer } = req.body;
+    const { firstName, lastName, email, position, isCurrent } = req.body;
+    isOfficer = isOfficer === 'true';
     const officerModelDetails = {
-      officerMember: req.params.officer_id,
+      member: req.params.officer_id,
       position,
       isCurrent
     };
-    const officerMember = {
+    const memberObj = {
       isOfficer,
       firstName,
       lastName,
@@ -126,16 +101,24 @@ router.put(
 
     try {
       let officer = await Officer.findOne({
-        officerMember: req.params.officer_id
+        member: req.params.officer_id
       });
       const member = await Member.findById(req.params.officer_id);
 
-      if (officer) {
+      if (officer && isOfficer) {
         if (
-          req.file.path !== 'assets/users-01.png' &&
-          member.profileImage !== 'assets/users-01.png'
+          req.file.originalname !== 'users-01.png' &&
+          member.profileImageData.profileImageKey !== 'static/users-01.png'
         ) {
-          await unlinkAsync(member.profileImage);
+          s3.deleteObject(
+            {
+              Bucket: config.get('AWS_BUCKET_NAME'),
+              Key: member.profileImageData.profileImageKey
+            },
+            err => {
+              if (err) res.send({ err });
+            }
+          );
         }
         await Officer.findByIdAndUpdate(
           officer.id,
@@ -149,7 +132,7 @@ router.put(
             }
             await Member.findByIdAndUpdate(
               req.params.officer_id,
-              officerMember,
+              memberObj,
               (err2, obj) => {
                 if (err2) {
                   return res
@@ -164,17 +147,25 @@ router.put(
         );
       } else if (!officer && isOfficer) {
         if (
-          member.profileImage !== 'assets/users-01.png' &&
-          require.file.path !== 'assets/users-01.png'
+          req.file.originalname !== 'users-01.png' &&
+          member.profileImageData.profileImageKey !== 'static/users-01.png'
         ) {
-          await unlinkAsync(req.file.path);
+          s3.deleteObject(
+            {
+              Bucket: config.get('AWS_BUCKET_NAME'),
+              Key: member.profileImageData.profileImageKey
+            },
+            err => {
+              if (err) res.send({ err });
+            }
+          );
         }
         officer = new Officer(officerModelDetails);
         await officer.save();
 
         await Member.findByIdAndUpdate(
           req.params.officer_id,
-          officerMember,
+          memberObj,
           (err, obj) => {
             if (err) {
               return res
@@ -184,15 +175,70 @@ router.put(
             res.json(obj);
           }
         );
+      } else if (officer && !isOfficer) {
+        if (
+          req.file.originalname !== 'users-01.png' &&
+          member.profileImageData.profileImageKey !== 'static/users-01.png'
+        ) {
+          s3.deleteObject(
+            {
+              Bucket: config.get('AWS_BUCKET_NAME'),
+              Key: member.profileImageData.profileImageKey
+            },
+            err => {
+              if (err) res.send({ err });
+            }
+          );
+        }
+        await Officer.findByIdAndDelete(officer.id, err => {
+          if (err) return res.status(500).send(err);
+        });
+        await Member.findByIdAndUpdate(member.id, { isOfficer: false }, err => {
+          if (err) {
+            return res
+              .status(400)
+              .json({ errors: [{ msg: 'Error updating' }] });
+          }
+          res.json({ msg: 'Officer Removed' });
+        });
+      } else if (!officer && !isOfficer) {
+        if (req.file.originalname !== 'users-01.png') {
+          s3.deleteObject(
+            {
+              Bucket: config.get('AWS_BUCKET_NAME'),
+              Key: req.file.key
+            },
+            err => {
+              if (err) res.send({ err });
+            }
+          );
+        }
+        res.send('Error updating');
       } else {
-        if (req.file.path !== 'assets/users-01.png') {
-          await unlinkAsync(req.file.path);
+        if (req.file.originalname !== 'users-01.png') {
+          s3.deleteObject(
+            {
+              Bucket: config.get('AWS_BUCKET_NAME'),
+              Key: req.file.key
+            },
+            err => {
+              if (err) res.send({ err });
+            }
+          );
         }
         res.status(500).send('Officer not found');
       }
     } catch (err) {
-      if (req.file.path !== 'assets/users-01.png') {
-        await unlinkAsync(req.file.path);
+      if (req.file.originalname !== 'users-01.png') {
+        s3.deleteObject(
+          {
+            Bucket: config.get('AWS_BUCKET_NAME'),
+            Key: req.file.key
+          },
+          err2 => {
+            if (err2) res.send({ err2 });
+          }
+        );
       }
       console.error(err.message);
       res.status(500).send('Server Error');

@@ -26,8 +26,13 @@ const MemberSchema = new mongoose.Schema({
       required: true
     }
   },
-  resume: {
-    type: String
+  resumeData: {
+    resumeLink: {
+      type: String
+    },
+    resumeKey: {
+      type: String
+    }
   },
   isOfficer: {
     type: Boolean,

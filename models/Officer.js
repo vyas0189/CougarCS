@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const OfficerSchema = new mongoose.Schema({
-  officerMember: {
+  member: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'member'
   },
