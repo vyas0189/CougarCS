@@ -9,7 +9,7 @@ const { upload } = require('../uploads/resume');
 const router = express.Router();
 
 // @route   PUT api/resume
-// @desc    Create the admin
+// @desc    Add or update resume
 // @access  Private
 router.put(
   '/',
@@ -66,5 +66,38 @@ router.put(
     }
   }
 );
+
+// @route   DELETE api/resume
+// @desc    Delete an resume
+// @access  Private
+router.delete('/', auth, async (req, res) => {
+  try {
+    const member = await Member.findById(req.member.id).populate('-password');
+    if (member) {
+      if (Object.entries(member.resumeData)[2][1]) {
+        s3.deleteObject(
+          {
+            Bucket: config.get('AWS_BUCKET_NAME'),
+            Key: member.resumeData.resumeKey
+          },
+          async () => {
+            await Member.updateOne(
+              { _id: member.id },
+              { $unset: { resumeData: '' } }
+            );
+            res.json({ msg: 'Success' });
+          }
+        );
+      } else {
+        res.status(500).send('Resume not found');
+      }
+    } else {
+      res.status(500).send('Error removing.');
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 module.exports = router;
