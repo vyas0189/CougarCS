@@ -1,0 +1,11 @@
+{
+  "MONGO_URI": "mongodb+srv://vyas0:rxvLz4QHu7zZdQBp@cluster0-pawv9.mongodb.net/test?retryWrites=true",
+  "JWT_SECRET": "mySecretToken",
+  "AUTH_ADMIN": "COUGAR_ADMIN",
+  "ADMIN_EMAIL": "webmaster@cougarcs.com",
+  "ADMIN_PASS": "123456",
+  "AWS_ACCESS_KEY": "AKIAJZMUQFL4MW3RXM2Q",
+  "AWS_ACCESS_SECRET": "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",
+  "AWS_BUCKET_NAME": "cougarscs-profile-images",
+  "AWS_REGION": "us-east-2"
+}
