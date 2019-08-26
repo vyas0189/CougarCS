@@ -4,7 +4,7 @@ const { check, validationResult } = require('express-validator/check');
 const { s3 } = require('../../config/aws');
 const auth = require('../../middleware/auth');
 const Member = require('../../models/Member');
-const { upload } = require('../uploads/resume');
+const { upload } = require('../../uploads/resume');
 
 const router = express.Router();
 

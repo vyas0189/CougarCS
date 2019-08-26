@@ -4,7 +4,7 @@ const { check, validationResult } = require('express-validator/check');
 const Officer = require('../../models/Officer');
 const Member = require('../../models/Member');
 const { s3 } = require('../../config/aws');
-const { upload } = require('../uploads/profileImage');
+const { upload } = require('../../uploads/profileImage');
 
 const admin = require('../../middleware/admin');
 

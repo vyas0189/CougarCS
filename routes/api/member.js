@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator/check');
 const { s3 } = require('../../config/aws');
-const { upload } = require('../uploads/profileImage');
+const { upload } = require('../../uploads/profileImage');
 require('../../config/aws');
 
 const Member = require('../../models/Member');

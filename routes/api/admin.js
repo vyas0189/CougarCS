@@ -14,14 +14,15 @@ router.post('/create', async (req, res) => {
 
     if (admin.length < 1) {
       admin = new Admin({
-        email: config.get('ADMIN_EMAIL'),
-        password: config.get('ADMIN_PASS')
+        email: req.body.email,
+        password: req.body.password
       });
       const salt = await bcrypt.genSalt(10);
-      admin.password = await bcrypt.hash(config.get('ADMIN_PASS'), salt);
+      admin.password = await bcrypt.hash(admin.password, salt);
       admin.save();
+      res.json({ msg: 'Admin created!' });
     } else {
-      res.status(500).send('Cannot Create Admin');
+      res.send('Cannot create Admin');
     }
   } catch (err) {
     console.error(err.message);
@@ -29,4 +30,27 @@ router.post('/create', async (req, res) => {
   }
 });
 
+// @route   GET api/admin/update
+// @desc    Create the admin
+// @access  Private
+router.put('/update', async (req, res) => {
+  try {
+    let admin = await Admin.find();
+
+    if (admin.length < 1) {
+      admin = new Admin({
+        email: req.body.email,
+        password: req.body.password
+      });
+      const salt = await bcrypt.genSalt(10);
+      admin.password = await bcrypt.hash(config.get('ADMIN_PASS'), salt);
+      admin.save();
+    } else {
+      res.send('Cannot create Admin');
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 module.exports = router;

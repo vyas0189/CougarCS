@@ -38,6 +38,23 @@ const MemberSchema = new mongoose.Schema({
       type: String
     }
   },
+  pointsData: {
+    eventsAttend: [
+      {
+        eventName: { type: String },
+        eventDate: { type: Date }
+      }
+    ],
+    points: {
+      type: Number,
+      default: 0,
+      required: true
+    }
+  },
+  paymentDetails: {
+    paidAmount: { type: Number, default: 0 },
+    date: { type: Date }
+  },
   isOfficer: {
     type: Boolean,
     required: true,
