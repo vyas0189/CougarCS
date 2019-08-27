@@ -1,23 +1,24 @@
 import React from 'react';
 import { Nav, Navbar } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 import logo from '../../assets/CougarCS-1.png';
-import { LinkContainer } from "react-router-bootstrap";
 
 function NavBar() {
   return (
     <Navbar fluid collapseOnSelect expand="lg">
-      <Navbar.Brand>
-        <img
-          src={logo}
-          style={{ width: '175px' }}
-          className="App-logo"
-          alt="logo"
-        />
-      </Navbar.Brand>
+      <LinkContainer to="/">
+        <Navbar.Brand>
+          <img
+            src={logo}
+            style={{ width: '175px' }}
+            className="App-logo"
+            alt="logo"
+          />
+        </Navbar.Brand>
+      </LinkContainer>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="ml-auto">
-          
           <LinkContainer to="/about">
             <Nav.Link>About</Nav.Link>
           </LinkContainer>
