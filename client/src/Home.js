@@ -1,15 +1,17 @@
 import React from 'react';
 import { Carousel } from 'react-bootstrap';
 import bgImg from './assets/cougarcs_background1.jpg';
+import './Home.css';
 function Main() {
   return (
     <Carousel>
       <Carousel.Item>
-        <img className="d-block w-100" src={bgImg} alt="First slide" />
-        <Carousel.Caption>
-          <h3>First slide label</h3>
-          <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-        </Carousel.Caption>
+        <div className="ani">
+          <img className="firstImg" src={bgImg} alt="First slide" />
+          <div className="firstD">
+            <p className="firstP">Welcome to CougarCS</p>
+          </div>
+        </div>
       </Carousel.Item>
     </Carousel>
   );
