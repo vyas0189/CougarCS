@@ -1,10 +1,12 @@
 import React from 'react';
 import { Carousel, Container, Row } from 'react-bootstrap';
 import bgImg from './assets/cougarcs_background1.jpg';
-import pl from './assets/placeholder.jpg';
+import officers from './images';
 
 class About extends React.Component {
   render() {
+    console.log(officers);
+
     return (
       <div>
         <Carousel style={{ marginLeft: '25%', height: '60vh', width: '50vw' }}>
@@ -21,209 +23,33 @@ class About extends React.Component {
             </Carousel.Caption>
           </Carousel.Item>
         </Carousel>
+
         <Container fluid>
           <Row
             style={{ marginTop: '2%', marginLeft: '1.5%', marginRight: '2%' }}
           >
-            <div
-              style={{
-                marginLeft: '1%',
-                marginRight: '1%',
-                height: '20vh',
-                width: '120px'
-              }}
-            >
-              <img className="d-block w-100" src={pl} />
-              <div
-                style={{ textAlign: 'center', fontFamily: 'Times New Roman' }}
-              >
-                Position
-              </div>
-              <div
-                style={{ textAlign: 'center', fontFamily: 'Times New Roman' }}
-              >
-                Name
-              </div>
-            </div>
-            <div
-              style={{
-                marginLeft: '1%',
-                marginRight: '1%',
-                height: '20vh',
-                width: '120px'
-              }}
-            >
-              <img className="d-block w-100" src={pl} />
-              <div
-                style={{ textAlign: 'center', fontFamily: 'Times New Roman' }}
-              >
-                Position
-              </div>
-              <div
-                style={{ textAlign: 'center', fontFamily: 'Times New Roman' }}
-              >
-                Name
-              </div>
-            </div>
-            <div
-              style={{
-                marginLeft: '1%',
-                marginRight: '1%',
-                height: '20vh',
-                width: '120px'
-              }}
-            >
-              <img className="d-block w-100" src={pl} />
-              <div
-                style={{ textAlign: 'center', fontFamily: 'Times New Roman' }}
-              >
-                Position
-              </div>
-              <div
-                style={{ textAlign: 'center', fontFamily: 'Times New Roman' }}
-              >
-                Name
-              </div>
-            </div>
-            <div
-              style={{
-                marginLeft: '1%',
-                marginRight: '1%',
-                height: '20vh',
-                width: '120px'
-              }}
-            >
-              <img className="d-block w-100" src={pl} />
-              <div
-                style={{ textAlign: 'center', fontFamily: 'Times New Roman' }}
-              >
-                Position
-              </div>
-              <div
-                style={{ textAlign: 'center', fontFamily: 'Times New Roman' }}
-              >
-                Name
-              </div>
-            </div>
-            <div
-              style={{
-                marginLeft: '1%',
-                marginRight: '1%',
-                height: '20vh',
-                width: '120px'
-              }}
-            >
-              <img className="d-block w-100" src={pl} />
-              <div
-                style={{ textAlign: 'center', fontFamily: 'Times New Roman' }}
-              >
-                Position
-              </div>
-              <div
-                style={{ textAlign: 'center', fontFamily: 'Times New Roman' }}
-              >
-                Name
-              </div>
-            </div>
-            <div
-              style={{
-                marginLeft: '1%',
-                marginRight: '1%',
-                height: '20vh',
-                width: '120px'
-              }}
-            >
-              <img className="d-block w-100" src={pl} />
-              <div
-                style={{ textAlign: 'center', fontFamily: 'Times New Roman' }}
-              >
-                Position
-              </div>
-              <div
-                style={{ textAlign: 'center', fontFamily: 'Times New Roman' }}
-              >
-                Name
-              </div>
-            </div>
-            <div
-              style={{
-                marginLeft: '1%',
-                marginRight: '1%',
-                height: '20vh',
-                width: '120px'
-              }}
-            >
-              <img className="d-block w-100" src={pl} />
-              <div
-                style={{ textAlign: 'center', fontFamily: 'Times New Roman' }}
-              >
-                Position
-              </div>
-              <div
-                style={{ textAlign: 'center', fontFamily: 'Times New Roman' }}
-              >
-                Name
-              </div>
-            </div>
-            <div
-              style={{
-                marginLeft: '1%',
-                marginRight: '1%',
-                height: '20vh',
-                width: '120px'
-              }}
-            >
-              <img className="d-block w-100" src={pl} />
-              <div
-                style={{ textAlign: 'center', fontFamily: 'Times New Roman' }}
-              >
-                Position
-              </div>
-              <div
-                style={{ textAlign: 'center', fontFamily: 'Times New Roman' }}
-              >
-                Name
-              </div>
-            </div>
-            <div
-              style={{
-                marginLeft: '1%',
-                marginRight: '1%',
-                height: '20vh',
-                width: '120px'
-              }}
-            >
-              <img className="d-block w-100" src={pl} />
-              <div
-                style={{ textAlign: 'center', fontFamily: 'Times New Roman' }}
-              >
-                Position
-              </div>
-              <div
-                style={{ textAlign: 'center', fontFamily: 'Times New Roman' }}
-              >
-                Name
-              </div>
-            </div>
-            <div
-              style={{
-                marginLeft: '1%',
-                marginRight: '1%',
-                height: '20vh',
-                width: '120px'
-              }}
-            >
-              <img className="d-block w-100" src={pl} />
-              <div
-                style={{ textAlign: 'center', fontFamily: 'Times New Roman' }}
-              >
-                Position
-              </div>
-              <div
-                style={{ textAlign: 'center', fontFamily: 'Times New Roman' }}
-              >
-                Name
-              </div>
+            <div className="officerImages">
+              {officers.map(officer => (
+                <div>
+                  <img className="d-block w-100" src={officer.image} />
+                  <div
+                    style={{
+                      textAlign: 'center',
+                      fontFamily: 'Times New Roman'
+                    }}
+                  >
+                    {officer.title}
+                  </div>
+                  <div
+                    style={{
+                      textAlign: 'center',
+                      fontFamily: 'Times New Roman'
+                    }}
+                  >
+                    {officer.name}
+                  </div>
+                </div>
+              ))}
             </div>
           </Row>
         </Container>
