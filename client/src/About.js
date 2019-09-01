@@ -1,6 +1,7 @@
 import React from 'react';
-import { Carousel, Container, Row } from 'react-bootstrap';
-import bgImg from './assets/cougarcs_background1.jpg';
+import { Card, Container, Row } from 'react-bootstrap';
+import './About.css';
+import gif from './assets/about.svg';
 import officers from './images';
 
 class About extends React.Component {
@@ -9,46 +10,35 @@ class About extends React.Component {
 
     return (
       <div>
-        <Carousel style={{ marginLeft: '25%', height: '60vh', width: '50vw' }}>
-          <Carousel.Item>
-            <img
-              style={{ height: '60vh', width: '20vw' }}
-              className="d-block w-100"
-              src={bgImg}
-              alt="First slide"
-            />
-            <Carousel.Caption>
-              <h3>First slide label</h3>
-              <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-            </Carousel.Caption>
-          </Carousel.Item>
-        </Carousel>
+        <Container fluid className="about-us">
+          <div>
+            <h1>About Us</h1>
+            <p>
+              CougarCS is the largest student run Computer Science organization
+              at the University of Houston. At CougarCS, our mission is to
+              smoothly transition our inexperienced members into young
+              professionals by the end of their degree, and to provide support
+              and assistance to members who struggle academically or who need
+              career guidance.
+            </p>
+          </div>
+          <img src={gif} alt="undraw svg"></img>
+        </Container>
 
-        <Container fluid>
-          <Row
-            style={{ marginTop: '2%', marginLeft: '1.5%', marginRight: '2%' }}
-          >
+        <Container fluid className="officerCard">
+          <h1>Meet the Officers</h1>
+          <Row>
             <div className="officerImages">
               {officers.map(officer => (
-                <div>
-                  <img className="d-block w-100" src={officer.image} />
-                  <div
-                    style={{
-                      textAlign: 'center',
-                      fontFamily: 'Times New Roman'
-                    }}
-                  >
-                    {officer.title}
-                  </div>
-                  <div
-                    style={{
-                      textAlign: 'center',
-                      fontFamily: 'Times New Roman'
-                    }}
-                  >
-                    {officer.name}
-                  </div>
-                </div>
+                <Card key={officer.id}>
+                  <Card.Img variant="top" src={officer.image} />
+                  <br></br>
+                  <Card.Body>
+                    <Card.Title id="officerName">{officer.name}</Card.Title>
+                    <h5 style={{ textAlign: 'center' }}>{officer.title}</h5>
+                    <p style={{ textAlign: 'center' }}>@cougarcs.com</p>
+                  </Card.Body>
+                </Card>
               ))}
             </div>
           </Row>
