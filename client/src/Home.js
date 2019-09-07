@@ -10,7 +10,7 @@ function Main() {
         <div className="ani">
           <div className="bgDark"> </div>
           {/* <img className="firstImg" src={bgImg} alt="First slide" /> */}
-          <div className="test">
+          <div className="main-text">
             <p className="firstP">
               WE ARE COUGARCS
               <br></br>

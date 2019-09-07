@@ -1,3 +1,7 @@
+body {
+  font-family: 'Raleway', 'Roboto Mono', monospace;
+}
+
 .carousel-control-prev {
   display: none !important;
 }
@@ -26,14 +30,12 @@
 .firstP {
   text-align: center;
   color: white;
-  font-family: 'Raleway', 'Roboto Mono', monospace;
   font-weight: bold;
   font-size: 3.5rem;
   width: 100%;
 }
 
 .ani {
-  /* background-color: rgb(116, 1, 5); */
   background: url('./assets/cougarcs_background11.jpg');
   margin: 0;
   width: 100vw;
@@ -51,7 +53,7 @@
   text-align: center;
 }
 
-.test {
+.main-text {
   position: absolute;
   margin: auto;
   top: 0;

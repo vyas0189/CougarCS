@@ -6,8 +6,6 @@ import officers from './images';
 
 class About extends React.Component {
   render() {
-    console.log(officers);
-
     return (
       <div>
         <Container fluid className="about-us">
