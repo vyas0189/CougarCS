@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Container, Row } from 'react-bootstrap';
+import { Card, Col, Container, Row } from 'react-bootstrap';
 import gif from '../../assets/about.svg';
 import officers from '../../officers';
 import './About.css';
@@ -8,19 +8,25 @@ class About extends React.Component {
   render() {
     return (
       <div>
-        <Container fluid className="about-us">
-          <div>
-            <h1>About Us</h1>
-            <p>
-              CougarCS is the largest student run Computer Science organization
-              at the University of Houston. At CougarCS, our mission is to
-              smoothly transition our inexperienced members into young
-              professionals by the end of their degree, and to provide support
-              and assistance to members who struggle academically or who need
-              career guidance.
-            </p>
-          </div>
-          <img src={gif} alt="undraw svg"></img>
+        <Container fluid>
+          <Row>
+            <Col>
+              <div className="about-us">
+                <h1>About Us</h1>
+                <p>
+                  CougarCS is the largest student run Computer Science
+                  organization at the University of Houston. At CougarCS, our
+                  mission is to smoothly transition our inexperienced members
+                  into young professionals by the end of their degree, and to
+                  provide support and assistance to members who struggle
+                  academically or who need career guidance.
+                </p>
+              </div>
+            </Col>
+            <Col>
+              <img src={gif} alt="undraw svg"></img>
+            </Col>
+          </Row>
         </Container>
 
         <Container fluid className="officerCard">

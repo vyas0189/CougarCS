@@ -14,21 +14,18 @@ body {
 } */
 
 .about-us {
-  display: grid;
-  grid-template-columns: 4fr 8fr;
-  height: 91.5vh;
-  padding: 5em;
+  padding: 2em;
 }
 
-.about-us > img {
-  height: 36rem;
+.col > img {
+  height: 40rem;
   width: auto;
   z-index: -99;
 }
 
-.about-us > p {
+/* .about-us > p {
   z-index: 1;
-}
+} */
 /* .about-us img {
   width: 100em;
   height: 10em;
