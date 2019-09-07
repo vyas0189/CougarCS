@@ -1,13 +1,13 @@
 import React from 'react';
 // import bodyImage from '../assets/'
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import About from './About';
 import './App.css';
-import Careerfair from './Careerfair';
 import NavBar from './components/Navbar/Navbar';
-import Events from './Events';
-import Home from './Home';
-import Membership from './Membership';
+import About from './pages/About/About';
+import Careerfair from './pages/CareerFair/Careerfair';
+import Events from './pages/Events/Events';
+import Home from './pages/Home/Home';
+import Membership from './pages/Membership/Membership';
 
 function App() {
   return (

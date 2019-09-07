@@ -1,8 +1,8 @@
 import React from 'react';
 import { Card, Container, Row } from 'react-bootstrap';
+import gif from '../../assets/about.svg';
+import officers from '../../officers';
 import './About.css';
-import gif from './assets/about.svg';
-import officers from './images';
 
 class About extends React.Component {
   render() {
@@ -34,7 +34,7 @@ class About extends React.Component {
                   <Card.Body>
                     <Card.Title id="officerName">{officer.name}</Card.Title>
                     <h5 style={{ textAlign: 'center' }}>{officer.title}</h5>
-                    <p style={{ textAlign: 'center' }}>@cougarcs.com</p>
+                    <p style={{ textAlign: 'center' }}>{officer.email}</p>
                   </Card.Body>
                 </Card>
               ))}

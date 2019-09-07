@@ -36,7 +36,7 @@ body {
 }
 
 .ani {
-  background: url('./assets/cougarcs_background11.jpg');
+  background: url('../../assets/cougarcs_background11.jpg');
   margin: 0;
   width: 100vw;
   height: 91.5vh;
