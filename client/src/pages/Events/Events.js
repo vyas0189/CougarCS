@@ -4,14 +4,17 @@ import React from 'react';
 import { Container } from 'react-bootstrap';
 import events from '../../events';
 import './Event.css';
+
 class Events extends React.Component {
   render() {
     return (
-      <Container>
+      <Container fluid style={{ padding: '2em' }}>
         <FullCalendar
           defaultView="dayGridMonth"
           plugins={[dayGridPlugin]}
           events={events}
+          fixedWeekCount={false}
+          
         />
       </Container>
     );

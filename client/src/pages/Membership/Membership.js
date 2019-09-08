@@ -1,8 +1,10 @@
 import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Card, Col, Container, Row } from 'react-bootstrap';
+import analyticsSVG from '../../assets/analytics.svg';
+import collectingSVG from '../../assets/collecting.svg';
 import gif from '../../assets/member.svg';
-// import { container } from 'googleapis/build/src/apis/container';
-
+import memorySVG from '../../assets/memory.svg';
+import teachingSVG from '../../assets/teaching.svg';
 class Membership extends React.Component {
   render() {
     return (
@@ -60,10 +62,84 @@ class Membership extends React.Component {
               <img src={gif} alt="undraw svg" style={{ width: '100%' }}></img>
             </Col>
           </Row>
-          <Row>
+        </Container>
+        <Container fluid style={{ textAlign: 'center' }}>
+          <h3>What Are The Benefits</h3>
+          <Row style={{ padding: '3em' }} md={12} xs={12}>
             <div>
-              <h1>Something we missed?</h1>
-              <h2>Email us at Info@cougarcs.com</h2>
+              <Row>
+                <Col>
+                  <Card style={{ textAlign: 'center', border: 'none' }}>
+                    <Card.Body>
+                      <div>
+                        <img
+                          src={analyticsSVG}
+                          style={{ height: '10em', width: '9em', color: 'red' }}
+                        />
+                      </div>
+                      <Card.Title style={{ textAlign: 'center' }}>
+                        Technical workshops
+                      </Card.Title>
+                      <p style={{ textAlign: 'center' }}>
+                        Learn industry standards and refine your skills in teams{' '}
+                      </p>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col>
+                  <Card style={{ textAlign: 'center', border: 'none' }}>
+                    <Card.Body>
+                      <div>
+                        <img
+                          src={collectingSVG}
+                          style={{ height: '10em', width: '9em', color: 'red' }}
+                        />
+                      </div>
+                      <Card.Title>Information Sessions</Card.Title>
+                      <p>
+                        Connect with companies from all over the world hiring at
+                        UH
+                      </p>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Card style={{ textAlign: 'center', border: 'none' }}>
+                    <Card.Body>
+                      <div>
+                        <img
+                          src={memorySVG}
+                          style={{ height: '10em', width: '9em', color: 'red' }}
+                        />
+                      </div>
+                      <Card.Title>Career Fair Preparation</Card.Title>
+                      <p>Practice with mock interviews and resume building</p>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col>
+                  <Card style={{ textAlign: 'center', border: 'none' }}>
+                    <Card.Body>
+                      <div>
+                        <img
+                          src={teachingSVG}
+                          style={{ height: '10em', width: '9em', color: 'red' }}
+                        />
+                      </div>
+                      <Card.Title style={{ textAlign: 'center' }}>
+                        Tutoring and Academic Support
+                      </Card.Title>
+                      <p style={{ textAlign: 'center' }}>
+                        Work through problems with intelligent and approachable
+                        tutors who are focused on member success lmk what you
+                        think
+                      </p>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
             </div>
           </Row>
         </Container>

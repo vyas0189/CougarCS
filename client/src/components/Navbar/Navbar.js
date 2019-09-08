@@ -5,7 +5,7 @@ import logo from '../../assets/newLogo.png';
 
 function NavBar() {
   return (
-    <Navbar fluid collapseOnSelect expand="lg">
+    <Navbar fluid="true" collapseOnSelect expand="lg">
       <LinkContainer to="/">
         <Navbar.Brand>
           <img
