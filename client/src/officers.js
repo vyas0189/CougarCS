@@ -78,7 +78,7 @@ const officers = [
   },
   {
     id: 8,
-    name: 'Nilanjan',
+    name: 'Nilanjan Chowdhury',
     image: nilanjan,
     linkedin: '',
     email: 'nilanjan.chowdhury@cougarcs.com',
