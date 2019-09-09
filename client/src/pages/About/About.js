@@ -29,7 +29,7 @@ class About extends React.Component {
           </Row>
         </Container>
 
-        <Container fluid className="officerCard">
+        <Container fluid className="officerCard" style={{marginBottom:"3em"}}>
           <h1>Meet the Officers</h1>
           <Row>
             <div className="officerImages">

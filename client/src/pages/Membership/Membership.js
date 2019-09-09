@@ -45,16 +45,20 @@ class Membership extends React.Component {
                   </p>
                   <p>
                     Whats that? You want to get more envolved with CougarCS?
-                    Interested in joining our webdev team? Please reach out
-                    to Vyas Ramankulangara at {' '} 
-                    <a href="mailto:Vyas.R@CougarCS.com">Vyas.R@CougarCS.com</a>.
-                    And for helping out at a 
-                    hackathon or capture the flag event? Lets get you in contact 
-                    with our Director of Hackathons, Athmar Ouda at {' '}
-                    <a href="mailto:Athmar.Ouda@CougarCS.com">Athmar.Ouda@CougarCS.com</a>.
-                    What about becoming a tutor? For that you can contact 
-                    {' '}
-                    <a href="mailto:Tutoring@CougarCS.com">Tutoring@cougarcs.com</a>.
+                    Interested in joining our webdev team? Please reach out to
+                    Vyas Ramankulangara at{' '}
+                    <a href="mailto:Vyas.R@CougarCS.com">Vyas.R@CougarCS.com</a>
+                    . And for helping out at a hackathon or capture the flag
+                    event? Lets get you in contact with our Director of
+                    Hackathons, Athmar Ouda at{' '}
+                    <a href="mailto:Athmar.Ouda@CougarCS.com">
+                      Athmar.Ouda@CougarCS.com
+                    </a>
+                    . What about becoming a tutor? For that you can contact{' '}
+                    <a href="mailto:Tutoring@CougarCS.com">
+                      Tutoring@cougarcs.com
+                    </a>
+                    .
                   </p>
                 </div>
               </Row>
@@ -81,6 +85,7 @@ class Membership extends React.Component {
                         <img
                           src={analyticsSVG}
                           style={{ height: '10em', width: '9em', color: 'red' }}
+                          alt="undraw"
                         />
                       </div>
                       <Card.Title style={{ textAlign: 'center' }}>
@@ -98,6 +103,7 @@ class Membership extends React.Component {
                       <div>
                         <img
                           src={collectingSVG}
+                          alt="undraw"
                           style={{ height: '10em', width: '9em', color: 'red' }}
                         />
                       </div>
@@ -117,6 +123,7 @@ class Membership extends React.Component {
                       <div>
                         <img
                           src={memorySVG}
+                          alt="undraw"
                           style={{ height: '10em', width: '9em', color: 'red' }}
                         />
                       </div>
@@ -131,6 +138,7 @@ class Membership extends React.Component {
                       <div>
                         <img
                           src={teachingSVG}
+                          alt="undraw"
                           style={{ height: '10em', width: '9em', color: 'red' }}
                         />
                       </div>
