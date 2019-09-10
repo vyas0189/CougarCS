@@ -12,7 +12,9 @@ body {
 /* .officerImages img {
   border-radius: 50%;
 } */
-
+.test {
+  max-height: 86.6vh;
+}
 .about-us {
   padding: 2em;
 }

@@ -1,7 +1,7 @@
 body {
   font-family: 'Raleway', 'Roboto Mono', monospace;
 }
-
+/* 
 .carousel-control-prev {
   display: none !important;
 }
@@ -10,7 +10,7 @@ body {
 }
 .carousel-indicators {
   display: none;
-}
+} */
 /* .firstImg {
   width: 100vw;
 
@@ -19,10 +19,10 @@ body {
   background-size: cover;
 } */
 .bgDark {
-  height: 91.5vh;
-  position: absolute;
-  top: 0%;
-  left: 0%;
+  height: 86.6vh;
+  /* position: absolute; */
+  /* top: 0%;
+  left: 0%; */
   background-color: rgba(0, 0, 0, 0.4);
   z-index: 1;
   width: 100vw;
@@ -39,7 +39,7 @@ body {
   background: url('../../assets/cougarcs_background11.jpg');
   margin: 0;
   width: 100vw;
-  height: 91.5vh;
+  height: 85.7vh;
   display: flex;
   flex-direction: column;
   align-items: center;
