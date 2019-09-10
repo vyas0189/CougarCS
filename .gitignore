@@ -1,3 +1,5 @@
 node_modules/
 # config/
 .vscode/settings.json
+.env
+.env.build
