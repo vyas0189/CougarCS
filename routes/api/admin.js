@@ -1,6 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
-const config = require('config');
+// const config = require('config');
 const Admin = require('../../models/Admin');
 
 const router = express.Router();
@@ -22,7 +22,7 @@ router.post('/create', async (req, res) => {
       admin.save();
       res.json({ msg: 'Admin created!' });
     } else {
-      res.send('Cannot create Admin');
+      res.status(203).send('Cannot create Admin');
     }
   } catch (err) {
     console.error(err.message);
@@ -46,7 +46,7 @@ router.put('/update', async (req, res) => {
       admin.password = await bcrypt.hash(process.env.ADMIN_PASS, salt);
       admin.save();
     } else {
-      res.send('Cannot create Admin');
+      res.status(500).send('Cannot create Admin');
     }
   } catch (err) {
     console.error(err.message);

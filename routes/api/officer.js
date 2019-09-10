@@ -1,5 +1,5 @@
 const express = require('express');
-const config = require('config');
+// const config = require('config');
 const { check, validationResult } = require('express-validator/check');
 const Officer = require('../../models/Officer');
 const Member = require('../../models/Member');

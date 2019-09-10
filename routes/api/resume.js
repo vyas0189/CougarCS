@@ -1,5 +1,5 @@
 const express = require('express');
-const config = require('config');
+// const config = require('config');
 const { check, validationResult } = require('express-validator/check');
 const { s3 } = require('../../config/aws');
 const auth = require('../../middleware/auth');

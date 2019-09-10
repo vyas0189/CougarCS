@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const config = require('config');
+// const config = require('config');
 const { check, validationResult } = require('express-validator/check');
 const { s3 } = require('../../config/aws');
 const { upload } = require('../../uploads/profileImage');

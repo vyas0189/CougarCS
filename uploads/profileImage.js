@@ -1,6 +1,6 @@
 const multer = require('multer');
 const multerS3 = require('multer-s3');
-const config = require('config');
+// const config = require('config');
 const { s3 } = require('../config/aws');
 
 const fileFilter = (req, file, cb) => {
