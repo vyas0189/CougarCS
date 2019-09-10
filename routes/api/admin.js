@@ -43,7 +43,7 @@ router.put('/update', async (req, res) => {
         password: req.body.password
       });
       const salt = await bcrypt.genSalt(10);
-      admin.password = await bcrypt.hash(config.get('ADMIN_PASS'), salt);
+      admin.password = await bcrypt.hash(process.env.ADMIN_PASS, salt);
       admin.save();
     } else {
       res.send('Cannot create Admin');

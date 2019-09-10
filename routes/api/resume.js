@@ -22,7 +22,7 @@ router.put(
     if (!errors.isEmpty()) {
       s3.deleteObject(
         {
-          Bucket: config.get('AWS_BUCKET_NAME'),
+          Bucket: process.env.AWS_BUCKET_NAME,
           Key: req.file.key
         },
         err => {
@@ -38,7 +38,7 @@ router.put(
         if (member.resumeData.resumeKey != null) {
           s3.deleteObject(
             {
-              Bucket: config.get('AWS_BUCKET_NAME'),
+              Bucket: process.env.AWS_BUCKET_NAME,
               Key: member.resumeData.resumeKey
             },
             err => {
@@ -77,7 +77,7 @@ router.delete('/', auth, async (req, res) => {
       if (Object.entries(member.resumeData)[2][1]) {
         s3.deleteObject(
           {
-            Bucket: config.get('AWS_BUCKET_NAME'),
+            Bucket: process.env.AWS_BUCKET_NAME,
             Key: member.resumeData.resumeKey
           },
           async () => {

@@ -4,8 +4,8 @@
   "AUTH_ADMIN": "COUGAR_ADMIN",
   "ADMIN_EMAIL": "webmaster@cougarcs.com",
   "ADMIN_PASS": "123456",
-  "AWS_ACCESS_KEY": "AKIAJZMUQFL4MW3RXM2Q",
+  "AWS_ACCESS_KEYS": "AKIAJZMUQFL4MW3RXM2Q",
   "AWS_ACCESS_SECRET": "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",
   "AWS_BUCKET_NAME": "cougarscs-profile-images",
-  "AWS_REGION": "us-east-2"
+  "AWS_REGIONS": "us-east-2"
 }

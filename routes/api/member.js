@@ -96,7 +96,7 @@ router.post(
 
       jwt.sign(
         payload,
-        config.get('JWT_SECRET'),
+        process.env.JWT_SECRET,
         {
           expiresIn: 360000
         },
@@ -133,7 +133,7 @@ router.put(
       if (req.file.originalname !== 'users-01.png') {
         s3.deleteObject(
           {
-            Bucket: config.get('AWS_BUCKET_NAME'),
+            Bucket: process.env.AWS_BUCKET_NAME,
             Key: req.file.key
           },
           err => {
@@ -167,7 +167,7 @@ router.put(
           ) {
             s3.deleteObject(
               {
-                Bucket: config.get('AWS_BUCKET_NAME'),
+                Bucket: process.env.AWS_BUCKET_NAME,
                 Key: member.profileImageData.profileImageKey
               },
               err => {
@@ -191,7 +191,7 @@ router.put(
           if (req.file.originalname !== 'users-01.png') {
             s3.deleteObject(
               {
-                Bucket: config.get('AWS_BUCKET_NAME'),
+                Bucket: process.env.AWS_BUCKET_NAME,
                 Key: req.file.key
               },
               err => {
@@ -205,7 +205,7 @@ router.put(
         if (req.file.originalname !== 'users-01.png') {
           s3.deleteObject(
             {
-              Bucket: config.get('AWS_BUCKET_NAME'),
+              Bucket: process.env.AWS_BUCKET_NAME,
               Key: req.file.key
             },
             err => {
@@ -221,7 +221,7 @@ router.put(
       if (req.file.originalname !== 'users-01.png') {
         s3.deleteObject(
           {
-            Bucket: config.get('AWS_BUCKET_NAME'),
+            Bucket: process.env.AWS_BUCKET_NAME,
             Key: req.file.key
           },
           err2 => {
@@ -255,7 +255,7 @@ router.delete('/:member_id', auth, async (req, res) => {
             ) {
               s3.deleteObject(
                 {
-                  Bucket: config.get('AWS_BUCKET_NAME'),
+                  Bucket: process.env.AWS_BUCKET_NAME,
                   Key: member.profileImageData.profileImageKey
                 },
                 err2 => {
@@ -265,7 +265,7 @@ router.delete('/:member_id', auth, async (req, res) => {
             }
             s3.deleteObject(
               {
-                Bucket: config.get('AWS_BUCKET_NAME'),
+                Bucket: process.env.AWS_BUCKET_NAME,
                 Key: member.resumeData.resumeKey
               },
               err2 => {
@@ -285,7 +285,7 @@ router.delete('/:member_id', auth, async (req, res) => {
             ) {
               s3.deleteObject(
                 {
-                  Bucket: config.get('AWS_BUCKET_NAME'),
+                  Bucket: process.env.AWS_BUCKET_NAME,
                   Key: member.profileImageData.profileImageKey
                 },
                 err2 => {
@@ -295,7 +295,7 @@ router.delete('/:member_id', auth, async (req, res) => {
             }
             s3.deleteObject(
               {
-                Bucket: config.get('AWS_BUCKET_NAME'),
+                Bucket: process.env.AWS_BUCKET_NAME,
                 Key: member.resumeData.resumeKey
               },
               err2 => {

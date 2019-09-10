@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const config = require('config');
 
-console.log(process.env.MONGO_URI);
+// console.log(process.env.MONGO_URI);
 
 const db = process.env.MONGO_URI;
 // config.get('MONGO_URI');
