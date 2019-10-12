@@ -18,4 +18,7 @@ app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/resume', require('./routes/api/resume'));
 // app.use('/api/event', require('./routes/api/event'));
 
-app.listen(PORT, () => console.log(`Listening to port ${PORT}`));
+app.listen(PORT, () =>
+  console.log(`Listening to port ${PORT}
+URL: http://localhost:${PORT}`)
+);
