@@ -3,4 +3,4 @@ node_modules/
 .env
 .env.build
 credentials.json
-token.js
+token.json
