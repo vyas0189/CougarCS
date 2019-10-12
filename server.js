@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const connectDB = require('./config/db');
+
 connectDB();
 
 const app = express();
@@ -18,7 +19,6 @@ app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/resume', require('./routes/api/resume'));
 // app.use('/api/event', require('./routes/api/event'));
 
-app.listen(PORT, () =>
-  console.log(`Listening to port ${PORT}
-URL: http://localhost:${PORT}`)
-);
+app.listen(PORT, () => {
+  console.log(`Listening to port ${PORT} URL: http://localhost:${PORT}`);
+});

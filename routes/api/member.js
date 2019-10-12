@@ -55,14 +55,16 @@ router.post(
       .not()
       .isEmpty(),
     check('email', 'Email is required').isEmail(),
-    check('password', 'Password is required').exists()
+    check('password', 'Password is required').exists(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ msg: errors.array() });
     }
-    const { firstName, lastName, email, password } = req.body;
+    const {
+      firstName, lastName, email, password,
+    } = req.body;
     try {
       let member = await Member.findOne({ email });
       if (member) {
@@ -73,7 +75,7 @@ router.post(
       const profileImageData = {
         profileImage:
           'https://cougarscs-profile-images.s3.us-east-2.amazonaws.com/static/users-01.png',
-        profileImageKey: 'static/users-01.png'
+        profileImageKey: 'static/users-01.png',
       };
 
       member = new Member({
@@ -82,7 +84,7 @@ router.post(
         email,
         password,
         isOfficer: false,
-        profileImageData
+        profileImageData,
       });
 
       const salt = await bcrypt.genSalt(10);
@@ -90,25 +92,25 @@ router.post(
       await member.save();
       const payload = {
         member: {
-          id: member.id
-        }
+          id: member.id,
+        },
       };
 
       jwt.sign(
         payload,
         process.env.JWT_SECRET,
         {
-          expiresIn: 360000
+          expiresIn: 360000,
         },
         (err, token) => {
           if (err) throw err;
           res.json({ token });
-        }
+        },
       );
     } catch (err) {
       res.status(500).send('Server Error');
     }
-  }
+  },
 );
 // @route   PUT api/:member_id
 // @desc    Update an members
@@ -124,7 +126,7 @@ router.put(
     check('lastName', 'Last Name is required')
       .not()
       .isEmpty(),
-    check('email', 'Email is required').isEmail()
+    check('email', 'Email is required').isEmail(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -134,11 +136,11 @@ router.put(
         s3.deleteObject(
           {
             Bucket: process.env.AWS_BUCKET_NAME,
-            Key: req.file.key
+            Key: req.file.key,
           },
-          err => {
+          (err) => {
             if (err) res.send({ err });
-          }
+          },
         );
       }
       return res.status(400).json({ msg: errors.array() });
@@ -157,8 +159,8 @@ router.put(
           email,
           profileImageData: {
             profileImage: req.file.location,
-            profileImageKey: req.file.key
-          }
+            profileImageKey: req.file.key,
+          },
         };
 
         if (member) {
@@ -168,11 +170,11 @@ router.put(
             s3.deleteObject(
               {
                 Bucket: process.env.AWS_BUCKET_NAME,
-                Key: member.profileImageData.profileImageKey
+                Key: member.profileImageData.profileImageKey,
               },
-              err => {
+              (err) => {
                 if (err) res.send({ err });
-              }
+              },
             );
           }
           await Member.findByIdAndUpdate(
@@ -185,18 +187,18 @@ router.put(
                   .json({ errors: [{ msg: 'Error updating' }] });
               }
               res.json(obj);
-            }
+            },
           );
         } else {
           if (req.file.originalname !== 'users-01.png') {
             s3.deleteObject(
               {
                 Bucket: process.env.AWS_BUCKET_NAME,
-                Key: req.file.key
+                Key: req.file.key,
               },
-              err => {
+              (err) => {
                 if (err) res.send({ err });
-              }
+              },
             );
           }
           return res.status(400).json({ errors: [{ msg: 'Error updating' }] });
@@ -206,11 +208,11 @@ router.put(
           s3.deleteObject(
             {
               Bucket: process.env.AWS_BUCKET_NAME,
-              Key: req.file.key
+              Key: req.file.key,
             },
-            err => {
+            (err) => {
               if (err) res.send({ err });
-            }
+            },
           );
         }
         return res
@@ -222,17 +224,17 @@ router.put(
         s3.deleteObject(
           {
             Bucket: process.env.AWS_BUCKET_NAME,
-            Key: req.file.key
+            Key: req.file.key,
           },
-          err2 => {
+          (err2) => {
             if (err2) res.send({ err2 });
-          }
+          },
         );
       }
       console.error(err.message);
       res.status(500).send('Server Error');
     }
-  }
+  },
 );
 // @route   DELETE api/:member_id
 // @desc    Delete an members
@@ -245,7 +247,7 @@ router.delete('/:member_id', auth, async (req, res) => {
         const officer = await Officer.findOne({ member: member.id });
 
         if (officer) {
-          await Officer.findByIdAndDelete(officer.id, err => {
+          await Officer.findByIdAndDelete(officer.id, (err) => {
             if (err) return res.status(500).send(err);
           });
           await Member.findByIdAndDelete(req.params.member_id, (err, obj) => {
@@ -256,21 +258,21 @@ router.delete('/:member_id', auth, async (req, res) => {
               s3.deleteObject(
                 {
                   Bucket: process.env.AWS_BUCKET_NAME,
-                  Key: member.profileImageData.profileImageKey
+                  Key: member.profileImageData.profileImageKey,
                 },
-                err2 => {
+                (err2) => {
                   if (err) res.send({ err2 });
-                }
+                },
               );
             }
             s3.deleteObject(
               {
                 Bucket: process.env.AWS_BUCKET_NAME,
-                Key: member.resumeData.resumeKey
+                Key: member.resumeData.resumeKey,
               },
-              err2 => {
+              (err2) => {
                 if (err) res.send({ err2 });
-              }
+              },
             );
             res.json(obj);
           });
@@ -286,24 +288,24 @@ router.delete('/:member_id', auth, async (req, res) => {
               s3.deleteObject(
                 {
                   Bucket: process.env.AWS_BUCKET_NAME,
-                  Key: member.profileImageData.profileImageKey
+                  Key: member.profileImageData.profileImageKey,
                 },
-                err2 => {
+                (err2) => {
                   if (err2) res.send({ err2 });
-                }
+                },
               );
             }
             s3.deleteObject(
               {
                 Bucket: process.env.AWS_BUCKET_NAME,
-                Key: member.resumeData.resumeKey
+                Key: member.resumeData.resumeKey,
               },
-              err2 => {
+              (err2) => {
                 if (err) res.send({ err2 });
-              }
+              },
             );
             res.json(obj);
-          }
+          },
         );
       }
     } else {

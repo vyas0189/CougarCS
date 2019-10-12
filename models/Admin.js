@@ -4,16 +4,16 @@ const AdminSchema = new mongoose.Schema({
   email: {
     type: String,
     trim: true,
-    required: true
+    required: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   date: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 module.exports = mongoose.model('admin', AdminSchema);

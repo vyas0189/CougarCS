@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 // const config = require('config');
 
 const db = process.env.MONGO_URI;
-//process.env.MONGO_URI;
-//config.get('MONGO_URI');
+// process.env.MONGO_URI;
+// config.get('MONGO_URI');
 
 const connectDB = async () => {
   try {
@@ -11,7 +11,7 @@ const connectDB = async () => {
       useNewUrlParser: true,
       useCreateIndex: true,
       useFindAndModify: false,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
     });
     console.log('MongoDB Connected...');
   } catch (err) {

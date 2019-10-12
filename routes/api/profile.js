@@ -12,7 +12,7 @@ router.get('/me', auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({ member: req.member.id }).populate(
       'member',
-      ['firstName', 'lastName', 'profileImageData']
+      ['firstName', 'lastName', 'profileImageData'],
     );
 
     if (!profile) {
@@ -40,8 +40,8 @@ router.post(
         .isEmpty(),
       check('skills', 'Skills is required')
         .not()
-        .isEmpty()
-    ]
+        .isEmpty(),
+    ],
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -57,7 +57,7 @@ router.post(
       githubusername,
       skills,
       twitter,
-      linkedin
+      linkedin,
     } = req.body;
 
     // Build profile obj
@@ -69,7 +69,7 @@ router.post(
     if (bio) profileFields.bio = bio;
     if (status) profileFields.status = status;
     if (skills) {
-      profileFields.skills = skills.split(',').map(skill => skill.trim());
+      profileFields.skills = skills.split(',').map((skill) => skill.trim());
     }
 
     profileFields.social = {};
@@ -84,7 +84,7 @@ router.post(
         profile = await Profile.findOneAndUpdate(
           { member: req.member.id },
           { $set: profileFields },
-          { new: true }
+          { new: true },
         );
 
         return res.json(profile);
@@ -96,7 +96,7 @@ router.post(
       console.log(err.message);
       res.send(500).send('Server Error');
     }
-  }
+  },
 );
 
 module.exports = router;

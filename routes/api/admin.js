@@ -11,11 +11,10 @@ const router = express.Router();
 router.post('/create', async (req, res) => {
   try {
     let admin = await Admin.find();
-
     if (admin.length < 1) {
       admin = new Admin({
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
       });
       const salt = await bcrypt.genSalt(10);
       admin.password = await bcrypt.hash(admin.password, salt);
@@ -36,11 +35,10 @@ router.post('/create', async (req, res) => {
 router.put('/update', async (req, res) => {
   try {
     let admin = await Admin.find();
-
     if (admin.length < 1) {
       admin = new Admin({
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
       });
       const salt = await bcrypt.genSalt(10);
       admin.password = await bcrypt.hash(process.env.ADMIN_PASS, salt);

@@ -23,11 +23,11 @@ router.put(
       s3.deleteObject(
         {
           Bucket: process.env.AWS_BUCKET_NAME,
-          Key: req.file.key
+          Key: req.file.key,
         },
-        err => {
+        (err) => {
           if (err) res.send({ err });
-        }
+        },
       );
 
       return res.status(400).json({ msg: errors.array() });
@@ -39,11 +39,11 @@ router.put(
           s3.deleteObject(
             {
               Bucket: process.env.AWS_BUCKET_NAME,
-              Key: member.resumeData.resumeKey
+              Key: member.resumeData.resumeKey,
             },
-            err => {
+            (err) => {
               if (err) return res.send({ err });
-            }
+            },
           );
         }
         await Member.findByIdAndUpdate(
@@ -51,20 +51,20 @@ router.put(
           {
             resumeData: {
               resumeLink: req.file.location,
-              resumeKey: req.file.key
-            }
+              resumeKey: req.file.key,
+            },
           },
-          err1 => {
+          (err1) => {
             if (err1) return res.status(500).send(err1);
             res.json({ msg: 'Success' });
-          }
+          },
         );
       }
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');
     }
-  }
+  },
 );
 
 // @route   DELETE api/resume
@@ -78,15 +78,15 @@ router.delete('/', auth, async (req, res) => {
         s3.deleteObject(
           {
             Bucket: process.env.AWS_BUCKET_NAME,
-            Key: member.resumeData.resumeKey
+            Key: member.resumeData.resumeKey,
           },
           async () => {
             await Member.updateOne(
               { _id: member.id },
-              { $unset: { resumeData: '' } }
+              { $unset: { resumeData: '' } },
             );
             res.json({ msg: 'Success' });
-          }
+          },
         );
       } else {
         res.status(500).send('Resume not found');

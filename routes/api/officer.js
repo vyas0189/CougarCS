@@ -28,12 +28,12 @@ router.get('/', async (req, res) => {
 router.get('/:officer_id', async (req, res) => {
   try {
     const officers = await Officer.findOne({
-      member: req.params.officer_id
+      member: req.params.officer_id,
     }).populate('member', [
       'firstName',
       'lastName',
       'email',
-      'profileImageData'
+      'profileImageData',
     ]);
     if (!officers) {
       return res.status(400).json({ msg: 'User not found' });
@@ -62,7 +62,7 @@ router.put(
     check('position', 'Position is required')
       .not()
       .isEmpty(),
-    check('email', 'Email is required').isEmail()
+    check('email', 'Email is required').isEmail(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -71,22 +71,24 @@ router.put(
         s3.deleteObject(
           {
             Bucket: process.env.AWS_BUCKET_NAME,
-            Key: req.file.key
+            Key: req.file.key,
           },
-          err => {
+          (err) => {
             if (err) res.send({ err });
-          }
+          },
         );
       }
       return res.status(400).json({ msg: errors.array() });
     }
     let { isOfficer } = req.body;
-    const { firstName, lastName, email, position, isCurrent } = req.body;
+    const {
+      firstName, lastName, email, position, isCurrent,
+    } = req.body;
     isOfficer = isOfficer === 'true';
     const officerModelDetails = {
       member: req.params.officer_id,
       position,
-      isCurrent
+      isCurrent,
     };
     const memberObj = {
       isOfficer,
@@ -95,29 +97,29 @@ router.put(
       email,
       profileImageData: {
         profileImage: req.file.location,
-        profileImageKey: req.file.key
-      }
+        profileImageKey: req.file.key,
+      },
     };
 
     try {
       let officer = await Officer.findOne({
-        member: req.params.officer_id
+        member: req.params.officer_id,
       });
       const member = await Member.findById(req.params.officer_id);
 
       if (officer && isOfficer) {
         if (
-          req.file.originalname !== 'users-01.png' &&
-          member.profileImageData.profileImageKey !== 'static/users-01.png'
+          req.file.originalname !== 'users-01.png'
+          && member.profileImageData.profileImageKey !== 'static/users-01.png'
         ) {
           s3.deleteObject(
             {
               Bucket: process.env.AWS_BUCKET_NAME,
-              Key: member.profileImageData.profileImageKey
+              Key: member.profileImageData.profileImageKey,
             },
-            err => {
+            (err) => {
               if (err) res.send({ err });
-            }
+            },
           );
         }
         await Officer.findByIdAndUpdate(
@@ -140,24 +142,24 @@ router.put(
                     .json({ errors: [{ msg: 'Error updating member' }] });
                 }
                 MemberData.md = obj;
-              }
+              },
             );
             res.json(MemberData);
-          }
+          },
         );
       } else if (!officer && isOfficer) {
         if (
-          req.file.originalname !== 'users-01.png' &&
-          member.profileImageData.profileImageKey !== 'static/users-01.png'
+          req.file.originalname !== 'users-01.png'
+          && member.profileImageData.profileImageKey !== 'static/users-01.png'
         ) {
           s3.deleteObject(
             {
               Bucket: process.env.AWS_BUCKET_NAME,
-              Key: member.profileImageData.profileImageKey
+              Key: member.profileImageData.profileImageKey,
             },
-            err => {
+            (err) => {
               if (err) res.send({ err });
-            }
+            },
           );
         }
         officer = new Officer(officerModelDetails);
@@ -173,27 +175,27 @@ router.put(
                 .json({ errors: [{ msg: 'Error updating member' }] });
             }
             res.json(obj);
-          }
+          },
         );
       } else if (officer && !isOfficer) {
         if (
-          req.file.originalname !== 'users-01.png' &&
-          member.profileImageData.profileImageKey !== 'static/users-01.png'
+          req.file.originalname !== 'users-01.png'
+          && member.profileImageData.profileImageKey !== 'static/users-01.png'
         ) {
           s3.deleteObject(
             {
               Bucket: process.env.AWS_BUCKET_NAME,
-              Key: member.profileImageData.profileImageKey
+              Key: member.profileImageData.profileImageKey,
             },
-            err => {
+            (err) => {
               if (err) res.send({ err });
-            }
+            },
           );
         }
-        await Officer.findByIdAndDelete(officer.id, err => {
+        await Officer.findByIdAndDelete(officer.id, (err) => {
           if (err) return res.status(500).send(err);
         });
-        await Member.findByIdAndUpdate(member.id, { isOfficer: false }, err => {
+        await Member.findByIdAndUpdate(member.id, { isOfficer: false }, (err) => {
           if (err) {
             return res
               .status(400)
@@ -206,11 +208,11 @@ router.put(
           s3.deleteObject(
             {
               Bucket: process.env.AWS_BUCKET_NAME,
-              Key: req.file.key
+              Key: req.file.key,
             },
-            err => {
+            (err) => {
               if (err) res.send({ err });
-            }
+            },
           );
         }
         res.send('Error updating');
@@ -219,11 +221,11 @@ router.put(
           s3.deleteObject(
             {
               Bucket: process.env.AWS_BUCKET_NAME,
-              Key: req.file.key
+              Key: req.file.key,
             },
-            err => {
+            (err) => {
               if (err) res.send({ err });
-            }
+            },
           );
         }
         res.status(500).send('Officer not found');
@@ -233,17 +235,17 @@ router.put(
         s3.deleteObject(
           {
             Bucket: process.env.AWS_BUCKET_NAME,
-            Key: req.file.key
+            Key: req.file.key,
           },
-          err2 => {
+          (err2) => {
             if (err2) res.send({ err2 });
-          }
+          },
         );
       }
       console.error(err.message);
       res.status(500).send('Server Error');
     }
-  }
+  },
 );
 
 module.exports = router;

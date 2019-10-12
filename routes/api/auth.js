@@ -29,7 +29,7 @@ router.post(
   '/',
   [
     check('email', 'Please include a valid email').isEmail(),
-    check('password', 'Password is required').exists()
+    check('password', 'Password is required').exists(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -57,26 +57,26 @@ router.post(
       // Return jsonwebtoken
       const payload = {
         member: {
-          id: member.id
-        }
+          id: member.id,
+        },
       };
 
       jwt.sign(
         payload,
         process.env.JWT_SECRET,
         {
-          expiresIn: 360000
+          expiresIn: 360000,
         },
         (err, token) => {
           if (err) throw err;
           res.json({ token });
-        }
+        },
       );
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');
     }
-  }
+  },
 );
 
 // @route   POST api/auth/admin
@@ -86,7 +86,7 @@ router.post(
   '/admin',
   [
     check('email', 'Please include a valid email').isEmail(),
-    check('password', 'Password is required').exists()
+    check('password', 'Password is required').exists(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -113,25 +113,25 @@ router.post(
       // Return jsonwebtoken
       const payload = {
         admin: {
-          id: admin.id
-        }
+          id: admin.id,
+        },
       };
 
       jwt.sign(
         payload,
         process.env.JWT_SECRET,
         {
-          expiresIn: 360000
+          expiresIn: 360000,
         },
         (err, token) => {
           if (err) throw err;
           res.json({ token });
-        }
+        },
       );
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');
     }
-  }
+  },
 );
 module.exports = router;
