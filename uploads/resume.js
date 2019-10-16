@@ -24,11 +24,11 @@ const upload = multer({
         null,
         `resumes/${new Date().toISOString().replace(/:/g, '-')}${
           file.originalname
-        }`
+        }`,
       );
     },
-    fileFilter
-  })
+    fileFilter,
+  }),
 });
 
 module.exports = { upload };

@@ -56,7 +56,7 @@ router.put(
           },
           (err1) => {
             if (err1) return res.status(500).send(err1);
-            res.json({ msg: 'Success' });
+            return res.json({ msg: 'Success' });
           },
         );
       }

@@ -62,9 +62,7 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ msg: errors.array() });
     }
-    const {
-      firstName, lastName, email, password,
-    } = req.body;
+    const { firstName, lastName, email, password } = req.body;
     try {
       let member = await Member.findOne({ email });
       if (member) {
@@ -138,7 +136,7 @@ router.put(
             Bucket: process.env.AWS_BUCKET_NAME,
             Key: req.file.key,
           },
-          (err) => {
+          err => {
             if (err) res.send({ err });
           },
         );
@@ -172,7 +170,7 @@ router.put(
                 Bucket: process.env.AWS_BUCKET_NAME,
                 Key: member.profileImageData.profileImageKey,
               },
-              (err) => {
+              err => {
                 if (err) res.send({ err });
               },
             );
@@ -182,11 +180,11 @@ router.put(
             memberDetails,
             (err, obj) => {
               if (err) {
-                return res
-                  .status(400)
-                  .json({ errors: [{ msg: 'Error updating' }] });
+                return res.status(400).json({
+                  errors: [{ msg: 'Error updating' }],
+                });
               }
-              res.json(obj);
+              return res.json(obj);
             },
           );
         } else {
@@ -196,7 +194,7 @@ router.put(
                 Bucket: process.env.AWS_BUCKET_NAME,
                 Key: req.file.key,
               },
-              (err) => {
+              err => {
                 if (err) res.send({ err });
               },
             );
@@ -210,7 +208,7 @@ router.put(
               Bucket: process.env.AWS_BUCKET_NAME,
               Key: req.file.key,
             },
-            (err) => {
+            err => {
               if (err) res.send({ err });
             },
           );
@@ -226,14 +224,15 @@ router.put(
             Bucket: process.env.AWS_BUCKET_NAME,
             Key: req.file.key,
           },
-          (err2) => {
+          err2 => {
             if (err2) res.send({ err2 });
           },
         );
       }
       console.error(err.message);
-      res.status(500).send('Server Error');
+      return res.status(500).send('Server Error');
     }
+    // res.status(500).send('Server Error');
   },
 );
 // @route   DELETE api/:member_id
@@ -247,7 +246,7 @@ router.delete('/:member_id', auth, async (req, res) => {
         const officer = await Officer.findOne({ member: member.id });
 
         if (officer) {
-          await Officer.findByIdAndDelete(officer.id, (err) => {
+          await Officer.findByIdAndDelete(officer.id, err => {
             if (err) return res.status(500).send(err);
           });
           await Member.findByIdAndDelete(req.params.member_id, (err, obj) => {
@@ -260,7 +259,7 @@ router.delete('/:member_id', auth, async (req, res) => {
                   Bucket: process.env.AWS_BUCKET_NAME,
                   Key: member.profileImageData.profileImageKey,
                 },
-                (err2) => {
+                err2 => {
                   if (err) res.send({ err2 });
                 },
               );
@@ -270,7 +269,7 @@ router.delete('/:member_id', auth, async (req, res) => {
                 Bucket: process.env.AWS_BUCKET_NAME,
                 Key: member.resumeData.resumeKey,
               },
-              (err2) => {
+              err2 => {
                 if (err) res.send({ err2 });
               },
             );
@@ -290,7 +289,7 @@ router.delete('/:member_id', auth, async (req, res) => {
                   Bucket: process.env.AWS_BUCKET_NAME,
                   Key: member.profileImageData.profileImageKey,
                 },
-                (err2) => {
+                err2 => {
                   if (err2) res.send({ err2 });
                 },
               );
@@ -300,7 +299,7 @@ router.delete('/:member_id', auth, async (req, res) => {
                 Bucket: process.env.AWS_BUCKET_NAME,
                 Key: member.resumeData.resumeKey,
               },
-              (err2) => {
+              err2 => {
                 if (err) res.send({ err2 });
               },
             );

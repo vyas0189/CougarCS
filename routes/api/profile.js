@@ -69,7 +69,7 @@ router.post(
     if (bio) profileFields.bio = bio;
     if (status) profileFields.status = status;
     if (skills) {
-      profileFields.skills = skills.split(',').map((skill) => skill.trim());
+      profileFields.skills = skills.split(',').map(skill => skill.trim());
     }
 
     profileFields.social = {};
@@ -93,7 +93,6 @@ router.post(
       await profile.save();
       res.json(profile);
     } catch (err) {
-      console.log(err.message);
       res.send(500).send('Server Error');
     }
   },
